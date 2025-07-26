@@ -32,14 +32,6 @@ jobs:
           $ver = (Select-Xml -Path .\BetterInBlue\BetterInBlue.csproj -XPath "/Project/PropertyGroup/Version").Node.InnerText
           echo "BUILD_VERSION=$ver" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           invoke-expression 'dotnet build --no-restore --configuration Release --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
-      - name: write version into jsons
-        run: |
-          $ver = '$BUILD_VERSION'
-          $path = './BetterInBlue/bin/Release/BetterInBlue.json'
-          $json = Get-Content -Raw $path | ConvertFrom-Json
-          $json.AssemblyVersion = $ver
-          $content = $json | ConvertTo-Json
-          set-content -Path $path -Value $content
       - name: Archive
         run: Compress-Archive -Path BetterInBlue/bin/Release/* -DestinationPath BetterInBlue.zip
       - name: Upload a Build Artifact
