@@ -2,6 +2,11 @@ name: Release & Create repo.json
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment'
+        required: true
+        default: 'release'
 
 jobs:
   build:
@@ -29,7 +34,7 @@ jobs:
           invoke-expression 'dotnet build --no-restore --configuration Release --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
       - name: write version into jsons
         run: |
-          $ver = '${{ $BUILD_VERSION }}'
+          $ver = '$BUILD_VERSION'
           $path = './BetterInBlue/bin/Release/BetterInBlue.json'
           $json = Get-Content -Raw $path | ConvertFrom-Json
           $json.AssemblyVersion = $ver
@@ -46,14 +51,14 @@ jobs:
         id: upload-release-asset
         uses: softprops/action-gh-release@v2
         with:
-          name: 'Better in Blue ${{ $BUILD_VERSION }}'
-          tag_name: '${{ $BUILD_VERSION }}'
-          body: 'Automated release of Version ${{ $BUILD_VERSION }}'
+          name: Better in Blue $BUILD_VERSION
+          tag_name: $BUILD_VERSION
+          body: Automated release of Version $BUILD_VERSION
           make_latest: 'true'
           files: BetterInBlue.zip
       - name: Write out repo.json
         run: |
-          $ver = '${{ $BUILD_VERSION }}'
+          $ver = $BUILD_VERSION
           $path = './repo.json'
           $json = Get-Content -Raw $path | ConvertFrom-Json
           $json[0].AssemblyVersion = $ver
