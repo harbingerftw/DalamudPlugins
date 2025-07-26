@@ -1,0 +1,76 @@
+name: Release & Create repo.json
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'harbingerftw/BetterInBlue'
+          submodules: recursive
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '9.x.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Download Dalamud
+        run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
+          Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+      - name: Build
+        id: dotnet_build
+        run: |
+          $ver = (Select-Xml -Path .\BetterInBlue\BetterInBlue.csproj -XPath "/Project/PropertyGroup/Version").Node.InnerText
+          echo "BUILD_VERSION=$ver" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          invoke-expression 'dotnet build --no-restore --configuration Release --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
+      - name: write version into jsons
+        run: |
+          $ver = '${{ $BUILD_VERSION }}'
+          $path = './BetterInBlue/bin/Release/BetterInBlue.json'
+          $json = Get-Content -Raw $path | ConvertFrom-Json
+          $json.AssemblyVersion = $ver
+          $content = $json | ConvertTo-Json
+          set-content -Path $path -Value $content
+      - name: Archive
+        run: Compress-Archive -Path BetterInBlue/bin/Release/* -DestinationPath BetterInBlue.zip
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            ./BetterInBlue/bin/Release/*
+      - name: Create Release
+        id: upload-release-asset
+        uses: softprops/action-gh-release@v2
+        with:
+          name: 'Better in Blue ${{ $BUILD_VERSION }}'
+          tag_name: '${{ $BUILD_VERSION }}'
+          body: 'Automated release of Version ${{ $BUILD_VERSION }}'
+          make_latest: 'true'
+          files: BetterInBlue.zip
+      - name: Write out repo.json
+        run: |
+          $ver = '${{ $BUILD_VERSION }}'
+          $path = './repo.json'
+          $json = Get-Content -Raw $path | ConvertFrom-Json
+          $json[0].AssemblyVersion = $ver
+          $json[0].TestingAssemblyVersion = $ver
+          $json[0].DownloadLinkInstall = $json.DownloadLinkInstall -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
+          $json[0].DownloadLinkTesting = $json.DownloadLinkTesting -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
+          $json[0].DownloadLinkUpdate = $json.DownloadLinkUpdate -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
+          $content = $json | ConvertTo-Json -AsArray
+          set-content -Path $path -Value $content
+
+      - name: Commit repo.json
+        run: |
+          git config --global user.name "Actions User"
+          git config --global user.email "actions@github.com"
+          git fetch origin master
+          git branch -f master ${{ github.sha }}
+          git checkout master
+          git add repo.json
+          git commit -m "[CI] Updating repo.json for ${{ github.ref_name }}" || true
+          git push origin master
