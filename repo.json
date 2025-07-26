@@ -1,0 +1,33 @@
+[
+  {
+    "Author": "NotNite, harbingerftw",
+    "Name": "Better in Blue",
+    "Punchline": "Infinite Blue Mage spell loadouts.",
+    "Description": "Allows you to save, load, and share infinite Blue Mage spell loadouts and hotbars.",
+    "TestingChangelog": null,
+    "Tags": [
+      "blue",
+      "mage",
+      "blu",
+      "spell",
+      "action"
+    ],
+    "CategoryTags": null,
+    "IsHide": true,
+    "InternalName": "BetterInBlue",
+    "AssemblyVersion": "",
+    "TestingAssemblyVersion": null,
+    "IsTestingExclusive": false,
+    "RepoUrl": "https://github.com/harbingerftw/BetterInBlue",
+    "ApplicableVersion": "any",
+    "DalamudApiLevel": 12,
+    "TestingDalamudApiLevel": 12,
+    "DownloadCount": 1,
+    "LastUpdate": 0,
+    "DownloadLinkInstall": "",
+    "DownloadLinkUpdate": "",
+    "DownloadLinkTesting": "",
+    "LoadPriority": 0,
+    "IconUrl": "https://raw.githubusercontent.com/harbingerftw/BetterInBlue/main/icon.png",
+  }
+]
