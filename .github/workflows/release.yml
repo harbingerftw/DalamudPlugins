@@ -55,8 +55,8 @@ jobs:
       - name: Write out repo.json
         run: |
           $ver = ${{ steps.dotnet_build.outputs.BUILD_VERSION }}
-          Get-Location
-          Get-ChildItem
+          echo Get-Location
+          echo Get-ChildItem
           $path = './repo.json'
           $json = Get-Content -Raw $path | ConvertFrom-Json
           $json[0].AssemblyVersion = $ver
