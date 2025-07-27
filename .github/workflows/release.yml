@@ -33,12 +33,12 @@ jobs:
           echo "BUILD_VERSION=$ver" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           invoke-expression 'dotnet build --no-restore --configuration Release --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
       - name: Archive
-        run: Compress-Archive -Path .\BetterInBlue\bin\Release\* -DestinationPath BetterInBlue.zip
+        run: Compress-Archive -Path .\BetterInBlue\bin\x64\Release\* -DestinationPath BetterInBlue.zip
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
           path: |
-            ./BetterInBlue/bin/Release/*
+            ./BetterInBlue/bin/x64/Release/*
       - name: Create Release
         id: upload-release-asset
         uses: softprops/action-gh-release@v2
