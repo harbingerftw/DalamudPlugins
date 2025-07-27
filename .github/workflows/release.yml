@@ -45,9 +45,9 @@ jobs:
         id: upload-release-asset
         uses: softprops/action-gh-release@v2
         with:
-          name: Better in Blue $BUILD_VERSION
-          tag_name: $BUILD_VERSION
-          body: Automated release of Version $BUILD_VERSION
+          name: "Better in Blue $BUILD_VERSION"
+          tag_name: "$BUILD_VERSION"
+          body: "Automated release of Version $BUILD_VERSION"
           make_latest: 'true'
           files: BetterInBlue.zip
       - name: Write out repo.json
