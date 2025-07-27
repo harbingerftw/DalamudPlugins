@@ -54,7 +54,7 @@ jobs:
           files: BetterInBlue.zip
       - name: debug
         run: |
-          $d = Get-ChildItem
+          $d = Get-ChildItem ..
           echo $d
           echo "DBG=$d" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Write out repo.json
