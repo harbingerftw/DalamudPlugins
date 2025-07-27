@@ -67,7 +67,6 @@ jobs:
           $path = 'repo.json'
           $json = Get-Content -Raw $path | ConvertFrom-Json
           $json[0].AssemblyVersion = $ver
-          $json[0].TestingAssemblyVersion = $ver
           $json[0].DownloadLinkInstall = $json.DownloadLinkInstall -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
           $json[0].DownloadLinkUpdate = $json.DownloadLinkUpdate -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
           $content = $json | ConvertTo-Json -AsArray
