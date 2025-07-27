@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'harbingerftw/BetterInBlue'
+          path: source
           submodules: recursive
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -33,16 +34,17 @@ jobs:
       - name: Build
         id: dotnet_build
         run: |
-          $ver = (Select-Xml -Path .\BetterInBlue\BetterInBlue.csproj -XPath "/Project/PropertyGroup/Version").Node.InnerText
+          $ver = (Select-Xml -Path .\source\BetterInBlue\BetterInBlue.csproj -XPath "/Project/PropertyGroup/Version").Node.InnerText
           echo "BUILD_VERSION=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          cd .\source
           invoke-expression 'dotnet build --no-restore --configuration Release --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
       - name: Move Archive
-        run: .\BetterInBlue\bin\x64\Release\BetterInBlue\latest.zip .\BetterInBlue.zip
+        run: .\source\BetterInBlue\bin\x64\Release\BetterInBlue\latest.zip .\BetterInBlue.zip
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
           path: |
-            ./BetterInBlue/bin/x64/Release/*
+            ./source/BetterInBlue/bin/x64/Release/*
       - name: Create Release
         id: upload-release-asset
         uses: softprops/action-gh-release@v2
