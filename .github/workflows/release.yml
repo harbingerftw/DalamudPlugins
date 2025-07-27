@@ -63,7 +63,7 @@ jobs:
           echo "DBG=$d" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Write out repo.json
         run: |
-          $ver = ${{ steps.dotnet_build.outputs.BUILD_VERSION }}
+          $ver = '${{ steps.dotnet_build.outputs.BUILD_VERSION }}'
           $path = 'repo.json'
           $json = Get-Content -Raw $path | ConvertFrom-Json
           $json[0].AssemblyVersion = $ver
