@@ -15,7 +15,7 @@
     "CategoryTags": null,
     "IsHide": true,
     "InternalName": "BetterInBlue",
-    "AssemblyVersion": "",
+    "AssemblyVersion": null,
     "TestingAssemblyVersion": null,
     "IsTestingExclusive": false,
     "RepoUrl": "https://github.com/harbingerftw/BetterInBlue",
@@ -24,10 +24,10 @@
     "TestingDalamudApiLevel": 12,
     "DownloadCount": 1,
     "LastUpdate": 0,
-    "DownloadLinkInstall": "https://github.com/harbingerftw/DalamudPlugins/releases/download/0/BetterInBlue.zip",
-    "DownloadLinkUpdate": "https://github.com/harbingerftw/DalamudPlugins/releases/download/0/BetterInBlue.zip",
+    "DownloadLinkInstall": "https://github.com/harbingerftw/DalamudPlugins/releases/download//BetterInBlue.zip",
+    "DownloadLinkUpdate": "https://github.com/harbingerftw/DalamudPlugins/releases/download//BetterInBlue.zip",
     "DownloadLinkTesting": "",
     "LoadPriority": 0,
-    "IconUrl": "https://raw.githubusercontent.com/harbingerftw/BetterInBlue/main/icon.png",
+    "IconUrl": "https://raw.githubusercontent.com/harbingerftw/BetterInBlue/main/icon.png"
   }
 ]
