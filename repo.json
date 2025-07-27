@@ -15,7 +15,7 @@
     "CategoryTags": null,
     "IsHide": true,
     "InternalName": "BetterInBlue",
-    "AssemblyVersion": "",
+    "AssemblyVersion": null,
     "TestingAssemblyVersion": null,
     "IsTestingExclusive": false,
     "RepoUrl": "https://github.com/harbingerftw/BetterInBlue",
@@ -28,6 +28,6 @@
     "DownloadLinkUpdate": "",
     "DownloadLinkTesting": "",
     "LoadPriority": 0,
-    "IconUrl": "https://raw.githubusercontent.com/harbingerftw/BetterInBlue/main/icon.png",
+    "IconUrl": "https://raw.githubusercontent.com/harbingerftw/BetterInBlue/main/icon.png"
   }
 ]
