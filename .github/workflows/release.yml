@@ -34,7 +34,7 @@ jobs:
         id: dotnet_build
         run: |
           $ver = (Select-Xml -Path .\BetterInBlue\BetterInBlue.csproj -XPath "/Project/PropertyGroup/Version").Node.InnerText
-          echo "BUILD_VERSION=$ver" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "BUILD_VERSION=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           invoke-expression 'dotnet build --no-restore --configuration Release --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
       - name: Archive
         run: Compress-Archive -Path .\BetterInBlue\bin\x64\Release\* -DestinationPath BetterInBlue.zip
@@ -47,14 +47,14 @@ jobs:
         id: upload-release-asset
         uses: softprops/action-gh-release@v2
         with:
-          name: "Better in Blue $BUILD_VERSION"
-          tag_name: "$BUILD_VERSION"
-          body: "Automated release of Version $BUILD_VERSION"
+          name: Better in Blue ${{ steps.dotnet_build.outputs.BUILD_VERSION }}
+          tag_name: ${{ steps.dotnet_build.outputs.BUILD_VERSION }}
+          body: Automated release of Version ${{ steps.dotnet_build.outputs.BUILD_VERSION }}
           make_latest: 'true'
           files: BetterInBlue.zip
       - name: Write out repo.json
         run: |
-          $ver = $BUILD_VERSION
+          $ver = ${{ steps.dotnet_build.outputs.BUILD_VERSION }}
           $path = './repo.json'
           $json = Get-Content -Raw $path | ConvertFrom-Json
           $json[0].AssemblyVersion = $ver
