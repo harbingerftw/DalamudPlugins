@@ -41,7 +41,7 @@ jobs:
           cd .\source
           invoke-expression 'dotnet build --no-restore --configuration Release --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
       - name: Move Archive
-        run: .\source\BetterInBlue\bin\x64\Release\BetterInBlue\latest.zip .\BetterInBlue.zip
+        run: mv .\source\BetterInBlue\bin\x64\Release\BetterInBlue\latest.zip .\BetterInBlue.zip
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -58,7 +58,7 @@ jobs:
           files: BetterInBlue.zip
       - name: debug
         run: |
-          $d = Get-ChildItem ..
+          $d = Get-ChildItem
           echo $d
           echo "DBG=$d" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Write out repo.json
@@ -69,18 +69,12 @@ jobs:
           $json[0].AssemblyVersion = $ver
           $json[0].TestingAssemblyVersion = $ver
           $json[0].DownloadLinkInstall = $json.DownloadLinkInstall -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
-          $json[0].DownloadLinkTesting = $json.DownloadLinkTesting -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
           $json[0].DownloadLinkUpdate = $json.DownloadLinkUpdate -replace '[^/]+/BetterInBlue.zip',"$ver/BetterInBlue.zip"
           $content = $json | ConvertTo-Json -AsArray
           set-content -Path $path -Value $content
-
       - name: Commit repo.json
-        run: |
-          git config --global user.name "Actions User"
-          git config --global user.email "actions@github.com"
-          git fetch origin master
-          git branch -f master ${{ github.sha }}
-          git checkout master
-          git add repo.json
-          git commit -m "[CI] Updating repo.json for ${{ github.ref_name }}" || true
-          git push origin master
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Updating repo.json for ${{ steps.dotnet_build.outputs.BUILD_VERSION }}'
+          add: 'repo.json'
+          default_author: github_actions
